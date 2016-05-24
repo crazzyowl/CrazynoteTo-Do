@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.owl.crazynote.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_main"
+    android:background="#EEEEEE">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view"
@@ -15,6 +16,7 @@
         android:scrollbars="vertical"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
+
 
 
 </RelativeLayout>

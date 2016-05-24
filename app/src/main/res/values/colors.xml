@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00796b</color>
-    <color name="colorPrimaryDark">#004D40</color>
-    <color name="colorAccent">#ffa000</color>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E64A19</color>
+    <color name="colorPrimaryLight">#FFCCBC</color>
+    <color name="colorAccent">#009688</color>
+    <color name="colorAccentPressed">#3ac6b9</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#727272</color>
     <color name="date">#999999</color>
     <color name="task">#222222</color>
+    <color name="backgroundActivity">#f1f1f1</color>
+    <color name="colorBackgroundFabLabel">#FFFFFF</color>
 </resources>

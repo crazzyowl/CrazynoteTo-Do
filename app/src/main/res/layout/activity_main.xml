@@ -3,8 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/coordinatorLayout"
     android:fitsSystemWindows="true"
     tools:context="com.owl.crazynote.MainActivity">
 
@@ -23,14 +25,49 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_plus_white_24dp" />
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        app:menu_icon="@drawable/fab_add"
+        app:layout_behavior="com.owl.crazynote.FloatingFabButtonBehavior"
+        fab:menu_colorNormal="@color/colorAccent"
+        fab:menu_colorPressed="@color/colorAccentPressed"
+        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_labels_colorNormal="@color/colorBackgroundFabLabel"
+        fab:menu_labels_colorPressed="@color/colorBackgroundFabLabel"
+        fab:menu_labels_colorRipple="@color/colorBackgroundFabLabel"
+        fab:menu_labels_textColor="@color/colorPrimaryText"
+        fab:menu_backgroundColor="#c3ffffff">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add_a_photo_white"
+            fab:fab_size="mini"
+            fab:fab_label="Add photo"
+            style="@style/FabButtonMini"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_add_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/note_add_white"
+            fab:fab_size="mini"
+            fab:fab_label="Add Task"
+            style="@style/FabButtonMini"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
