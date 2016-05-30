@@ -6,4 +6,12 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="delete_button">Button</string>
+    <string name="add_date_button">Date</string>
+    <string name="dialogTask">Task</string>
+    <string name="dialogAddDate">Date</string>
+    <string name="dialogButton">Button</string>
+    <string name="delete_all_task">Delete all task</string>
+    <string name="show_task_in_log">Show task in log</string>
+    <string name="customDialogAdd">Add</string>
+    <string name="customDialogCancel">Cancel</string>
 </resources>

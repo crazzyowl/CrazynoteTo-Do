@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:id="@+id/coordinatorLayout"
     android:fitsSystemWindows="true"
+    android:background="@color/backgroundActivity"
     tools:context="com.owl.crazynote.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -65,7 +66,21 @@
             fab:fab_label="Add Task"
             style="@style/FabButtonMini"/>
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_add_task_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/note_add_white"
+            fab:fab_size="mini"
+            fab:fab_label="Add Task in Dialog"
+            style="@style/FabButtonMini"/>
+
     </com.github.clans.fab.FloatingActionMenu>
+    <FrameLayout
+        android:id="@+id/fl_interceptor"
+        android:descendantFocusability="blocksDescendants"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
     <android.support.design.widget.CoordinatorLayout

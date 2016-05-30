@@ -9,7 +9,15 @@
     <item
         android:id="@+id/action_about_app"
         android:title="@string/action_about_app"
-        android:orderInCategory="2">
+        android:orderInCategory="2"/>
+    <item
+        android:id="@+id/action_delete_all"
+        android:title="@string/delete_all_task"
+        android:orderInCategory="3"/>
+    <item
+        android:id="@+id/show_tasks_id_log"
+        android:title="@string/show_task_in_log"
+        android:orderInCategory="4">
 
     </item>
 

@@ -13,11 +13,18 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Task"
         android:id="@+id/add_task_task"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/add_task_data"/>
+        android:id="@+id/add_task"
+        android:hint="Date"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_date"
+        android:text="@string/add_date_button"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

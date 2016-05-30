@@ -30,7 +30,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
     public void onBindViewHolder(final MyViewHolder viewHolder, final int position) {
         final Task task = taskItems.get(position);
         viewHolder.task.setText(task.getTask());
-        viewHolder.date.setText(task.getDate());
+//        viewHolder.date.setText(task.getDate());
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -48,12 +48,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
 
     public final static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView task;
-        public TextView date;
+//        public TextView date;
 
         public MyViewHolder(View view) {
             super(view);
             task = (TextView) view.findViewById(R.id.task);
-            date = (TextView) view.findViewById(R.id.date);
+//            date = (TextView) view.findViewById(R.id.date);
         }
     }
 }

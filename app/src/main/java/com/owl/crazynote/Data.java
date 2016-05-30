@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class Data extends SQLiteOpenHelper {
     private static final int DATA_BASE_VER = 1;
+    private static final String TABLE_NAME ="tasks";
     public Data(Context context){
         super(context,"tasks.db",null,DATA_BASE_VER);
     }
@@ -38,26 +39,26 @@ public class Data extends SQLiteOpenHelper {
         values.put("task", task.getTask());
         values.put("date", task.getDate());
         if (task.getId() != 0) values.put("id", task.getId());
-        task.setId((int) db.insertOrThrow("tasks",null,values));
+        task.setId((int) db.insertOrThrow(TABLE_NAME,null,values));
         db.close();
     }
     public void deleteTask(int id){
         SQLiteDatabase db = getWritableDatabase();
         String[] argument ={String.valueOf(id)};
-        db.delete("tasks","id=?",argument);
+        db.delete(TABLE_NAME,"id=?",argument);
 //        db.execSQL("DELETE FROM tasks WHERE id='"+id+"';");
         db.close();
     }
     public void deleteAll(){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from tasks");
+        db.execSQL("delete from "+TABLE_NAME);
         db.close();
     }
     public List<Task> getAllTask(){
         List<Task> tasks = new ArrayList<>();
         String[] columns = {"id", "task","date"};
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query("tasks",columns,null,null,null,null,null);
+        Cursor cursor = db.query(TABLE_NAME,columns,null,null,null,null,null);
         while (cursor.moveToNext()){
 //            DatabaseUtils.dumpCurrentRow(cursor);
             Task task = new Task();
@@ -76,7 +77,7 @@ public class Data extends SQLiteOpenHelper {
         values.put("task", task);
         values.put("date", date);
         String args[]={id+""};
-        db.update("tasks",values,"id=?",args);
+        db.update(TABLE_NAME,values,"id=?",args);
         db.close();
     }
 

@@ -2,20 +2,18 @@ package com.owl.crazynote;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class AddTaskActivity extends AppCompatActivity {
     EditText editTextTask;
-    EditText editTextData;
+    EditText editTextDate;
     Button button;
     String taskValue;
-    String dataValue;
+    String dateValue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,14 +21,14 @@ public class AddTaskActivity extends AppCompatActivity {
 
 
         editTextTask = (EditText) findViewById(R.id.add_task_task);
-        editTextData = (EditText) findViewById(R.id.add_task_data);
+        editTextDate = (EditText) findViewById(R.id.add_task);
     }
     public void addTask(View view){
         taskValue = editTextTask.getText().toString();
-        dataValue = editTextData.getText().toString();
+        dateValue = editTextDate.getText().toString();
         Intent intent = new Intent();
         intent.putExtra("task",taskValue);
-        intent.putExtra("data",dataValue);
+        intent.putExtra("date", dateValue);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
