@@ -1,0 +1,137 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="0dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:layout_alignParentEnd="true" />
+        <RelativeLayout
+            android:id="@+id/viewTop"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:elevation="4dp">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true">
+                <EditText
+                    android:id="@+id/input_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hintAddTitle"
+                    android:background="@android:color/transparent"
+                    android:textSize="35sp"
+                    android:textColorLink="@android:color/white"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="39dp"
+                    android:layout_marginEnd="25dp"/>
+            </android.support.design.widget.TextInputLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/view_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:background="@color/backgroundActivity"
+            android:orientation="vertical"
+            android:paddingEnd="10dp"
+            android:paddingTop="35dp"
+            android:paddingStart="10dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/reminder"
+                android:layout_alignParentStart="true">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_schedule_grey_600_36dp"
+                    android:id="@+id/imageView" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/imageView">
+                    <TextView
+                        android:id="@+id/text_view_reminder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:onClick="datePicker"
+                        android:text="@string/wordReminder" />
+                    <TextView
+                        android:id="@+id/text_view_date"
+                        android:layout_width="match_parent"
+                        android:onClick="datePicker"
+                        android:layout_height="wrap_content"
+                        android:text="Set reminder..."/>
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/reminder"
+                android:layout_marginTop="15dp">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_description_grey_600_36dp"
+                    android:id="@+id/imageView2"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="10dp" />
+                    <EditText
+                        android:id="@+id/input_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:textStyle="normal"
+                        android:hint="@string/inputDescriptionHint"
+                        android:inputType="textMultiLine"
+                        android:background="@android:color/transparent"
+                        android:textColorHint="@color/colorPrimary"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/imageView2" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_save_white_36dp"
+        android:elevation="6dp"
+        app:layout_anchor="@id/viewTop"
+        app:layout_anchorGravity="bottom|right|end"/>
+
+</android.support.design.widget.CoordinatorLayout>

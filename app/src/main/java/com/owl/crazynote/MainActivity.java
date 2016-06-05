@@ -1,11 +1,7 @@
 package com.owl.crazynote;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,11 +21,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -44,20 +38,20 @@ public class MainActivity extends AppCompatActivity {
     final Context context = this;
     private static final int VERTICAL_ITEM_SPACE = 2;
     private Data dataBase = new Data(this);
-    private String taskValue;
-    private String taskDate;
+    private String noteTitle;
+    private String noteDate;
+    private String noteDescription;
+    private int colorCircleIcon;
     private FloatingActionButton fabAddTask;
     private FloatingActionButton fabAddTaskDialog;
     private FloatingActionMenu floatingActionMenu;
-    private Task lastTask = null;
-    private List<Task> taskList = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private Note lastNote = null;
+    private List<Note> noteList = new ArrayList<>();
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
     private Paint paint = new Paint();
     private InputMethodManager inputMethodManager;
-//    private Button dialogAdd;
-//    private Button dialogCancel;
-//    private EditText dialogEditTextTask;
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -67,18 +61,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             final int position = viewHolder.getAdapterPosition();
-            lastTask = taskList.get(position);
-            dataBase.deleteTask(taskList.get(position).getId());
-            taskList.remove(position);
+            lastNote = noteList.get(position);
+            dataBase.deleteTask(noteList.get(position).getId());
+            noteList.remove(position);
             taskAdapter.notifyDataSetChanged();
             showTasksInLog();
-            Snackbar.make(recyclerView, "1 task removed", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+            Snackbar.make(recyclerView, "1 note removed", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dataBase.addTask(lastTask);
-                    taskList.add(lastTask);
-                    Collections.sort(taskList);
-                    taskAdapter.notifyItemInserted(taskList.indexOf(lastTask));
+                    dataBase.addTask(lastNote);
+                    noteList.add(lastNote);
+                    Collections.sort(noteList);
+                    taskAdapter.notifyItemInserted(noteList.indexOf(lastNote));
                     recyclerView.requestLayout();
                 }
             }).show();
@@ -89,15 +83,16 @@ public class MainActivity extends AppCompatActivity {
             Bitmap icon;
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                 View view = viewHolder.itemView;
-                float height = (float) view.getBottom() - (float) view.getTop();
+//                float height = (float) view.getBottom() - (float) view.getTop();
+                float height = view.getHeight();
                 float width = height / 3;
                 if (dX > 0) {
-                    paint.setColor(Color.parseColor("#388E3C"));
+                   paint.setColor(Color.parseColor("#388E3C"));
                     RectF background = new RectF((float) view.getLeft(), (float) view.getTop(), dX, (float) view.getBottom());
                     c.drawRect(background, paint);
                     icon = BitmapFactory.decodeResource(getResources(), R.drawable.done_white);
                     RectF icon_dest = new RectF((float) view.getLeft() + width, (float) view.getTop() + width, (float) view.getLeft() + 2 * width, (float) view.getBottom() - width);
-                    c.drawBitmap(icon, null, icon_dest, paint);
+                  c.drawBitmap(icon, null, icon_dest, paint);
                 }
             }
             super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -112,63 +107,46 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //Fab buttons
-        fabAddTaskDialog = (FloatingActionButton) findViewById(R.id.fab_add_task_dialog);
-        assert fabAddTaskDialog != null;
         fabAddTask = (FloatingActionButton) findViewById(R.id.fab_add_task);
         assert fabAddTask != null;
         //Fab menu
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
         assert floatingActionMenu != null;
         floatingActionMenu.setClosedOnTouchOutside(true);
-        inputMethodManager = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
         fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+                Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
                 //close fab menu after click
                 floatingActionMenu.close(true);
             }
         });
-        fabAddTaskDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //close fab menu after click
-                floatingActionMenu.close(true);
-                final EditText editTextTask = new EditText(MainActivity.this);
-                inputMethodManager.showSoftInput(editTextTask,0);
-                editTextTask.setHint("Task...");
-                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Add a new task")
-                        .setView(editTextTask)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Task task = new Task(String.valueOf(editTextTask.getText()),"Test");
-                                dataBase.addTask(task);
-                                taskList.add(task);
-                                taskAdapter.notifyItemInserted(taskAdapter.getItemCount() - 1);
-                                recyclerView.requestLayout();
-                                inputMethodManager.hideSoftInputFromWindow(editTextTask.getWindowToken(),0);
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .create();
-                dialog.show();
-            }
-        });
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+                @Override
+                public void onRefresh(){
+                    refreshRecycleView();
+                    Toast.makeText(MainActivity.this, "Refreshed", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
+
         //Recycle view decoration
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new FadeInRightAnimator());
 
+        //add to database and refresh Recycler View
         refreshRecycleView();
         showTasksInLog();
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -179,14 +157,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode != REQUEST_CODE || resultCode != Activity.RESULT_OK) return;
         Bundle receiverData = data.getExtras();
-        taskValue = receiverData.getString("task");
-        taskDate = receiverData.getString("date");
-        Task task = new Task(taskValue, taskDate);
-        dataBase.addTask(task);
-        taskList.add(task);
+        noteTitle = receiverData.getString("title");
+        noteDate = receiverData.getString("date");
+        noteDescription =receiverData.getString("description");
+        colorCircleIcon = receiverData.getInt("colorCircleIcon");
+        Note note = new Note(noteTitle, noteDate, noteDescription,colorCircleIcon);
+        dataBase.addTask(note);
+        noteList.add(note);
         taskAdapter.notifyItemInserted(taskAdapter.getItemCount() - 1);
         recyclerView.requestLayout();
-//        fabAddTask.setVisibility(View.GONE);
 
     }
     @Override
@@ -208,18 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intentSettings = new Intent(this, SettingsActivity.class);
                 startActivity(intentSettings);
                 break;
-
-            case R.id.action_delete_all:
-                Snackbar.make(recyclerView, "Delete all", Snackbar.LENGTH_SHORT);
-                dataBase.deleteAll();
-                refreshRecycleView();
-                break;
-            case R.id.show_tasks_id_log:
-                Snackbar.make(recyclerView, "Show tasks in log", Snackbar.LENGTH_SHORT);
-                dataBase.deleteAll();
-                refreshRecycleView();
-                break;
-
             default:
                 break;
         }
@@ -227,13 +194,13 @@ public class MainActivity extends AppCompatActivity {
     }
     private void showTasksInLog() {
 
-        for (Task t : dataBase.getAllTask()) {
+        for (Note t : dataBase.getAllTask()) {
             Log.d("Dane z bazy:", t.toString());
         }
     }
     private void refreshRecycleView() {
-        taskList = dataBase.getAllTask();
-        taskAdapter = new TaskAdapter(taskList);
+        noteList = dataBase.getAllTask();
+        taskAdapter = new TaskAdapter(noteList,this);
         recyclerView.setAdapter(taskAdapter);
     }
 }

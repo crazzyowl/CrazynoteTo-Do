@@ -1,0 +1,117 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <RelativeLayout
+            android:id="@+id/viewTop"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical"
+            android:elevation="4dp">
+                <TextView
+                    android:id="@+id/title_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="35sp"
+                    android:textColorLink="@android:color/white"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/view_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:background="@color/backgroundActivity"
+            android:orientation="vertical"
+            android:paddingTop="35dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/reminder"
+                android:layout_alignParentStart="true">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_schedule_grey_600_36dp"
+                    android:id="@+id/imageView" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/imageView">
+                    <TextView
+                        android:id="@+id/text_view_reminder"
+                        android:layout_width="match_parent"
+                        android:text="@string/wordReminder"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/text_view_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/reminder"
+                android:layout_marginTop="15dp">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_description_grey_600_36dp"
+                    android:id="@+id/imageView2"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="10dp" />
+                <TextView
+                    android:id="@+id/description_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:textStyle="normal"
+                    android:background="@android:color/transparent"
+                    android:textColorHint="@color/colorPrimary"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/imageView2" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_mode_edit_white_36dp"
+        android:elevation="6dp"
+        app:layout_anchor="@id/viewTop"
+        app:layout_anchorGravity="bottom|right|end"/>
+
+</android.support.design.widget.CoordinatorLayout>

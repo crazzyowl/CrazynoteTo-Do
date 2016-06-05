@@ -14,7 +14,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="Write your task." />
+        android:hint="Write your title." />
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

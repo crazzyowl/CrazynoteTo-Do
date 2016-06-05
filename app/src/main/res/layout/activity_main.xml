@@ -10,21 +10,21 @@
     android:fitsSystemWindows="true"
     android:background="@color/backgroundActivity"
     tools:context="com.owl.crazynote.MainActivity">
+    <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize"-->
+            <!--android:background="?attr/colorPrimary"-->
+            <!--android:theme="@style/AppTheme"-->
+            <!--app:popupTheme="@style/AppTheme.PopupOverlay"-->
+            <!--/>-->
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
+    <!--</android.support.design.widget.AppBarLayout>-->
     <include layout="@layout/content_main" />
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab_menu"
@@ -34,6 +34,7 @@
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
+        android:elevation="6dp"
         app:menu_icon="@drawable/fab_add"
         app:layout_behavior="com.owl.crazynote.FloatingFabButtonBehavior"
         fab:menu_colorNormal="@color/colorAccent"
@@ -65,16 +66,6 @@
             fab:fab_size="mini"
             fab:fab_label="Add Task"
             style="@style/FabButtonMini"/>
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_add_task_dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/note_add_white"
-            fab:fab_size="mini"
-            fab:fab_label="Add Task in Dialog"
-            style="@style/FabButtonMini"/>
-
     </com.github.clans.fab.FloatingActionMenu>
     <FrameLayout
         android:id="@+id/fl_interceptor"

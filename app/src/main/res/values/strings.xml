@@ -1,17 +1,24 @@
 <resources>
     <string name="app_name">Crazynote</string>
-    <string name="version">Version 0.1</string>
+    <string name="version">Version 0.2</string>
     <string name="action_settings">Settings</string>
     <string name="action_about_app">About</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="delete_button">Button</string>
     <string name="add_date_button">Date</string>
+    <string name="err_msg_task">Enter your title</string>
     <string name="dialogTask">Task</string>
     <string name="dialogAddDate">Date</string>
     <string name="dialogButton">Button</string>
-    <string name="delete_all_task">Delete all task</string>
-    <string name="show_task_in_log">Show task in log</string>
+    <string name="delete_all_task">Delete all title</string>
+    <string name="show_task_in_log">Show title in log</string>
     <string name="customDialogAdd">Add</string>
     <string name="customDialogCancel">Cancel</string>
+    <string name="wordReminder">Reminder</string>
+    <string name="hintAddTitle">Task</string>
+    <string name="headlineDescription">Description</string>
+    <string name="inputDescriptionHint">Description</string>
+    <string name="title_activity_note">NoteActivity</string>
+    <string name="deleteNoteMenu">Delete</string>
 </resources>
