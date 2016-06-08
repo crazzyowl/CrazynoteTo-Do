@@ -7,7 +7,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="delete_button">Button</string>
     <string name="add_date_button">Date</string>
-    <string name="err_msg_task">Enter your title</string>
     <string name="dialogTask">Task</string>
     <string name="dialogAddDate">Date</string>
     <string name="dialogButton">Button</string>

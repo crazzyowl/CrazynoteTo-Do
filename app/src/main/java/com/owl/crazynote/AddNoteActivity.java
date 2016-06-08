@@ -2,48 +2,55 @@ package com.owl.crazynote;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class AddNoteActivity extends AppCompatActivity {
+    FloatingActionButton floatingActionButton;
     private EditText inputTitle;
     private EditText inputDescription;
     private TextView textViewDate;
-    private String dateValue="noReminder";
+    private TextView textViewDateLayout;
+    private RelativeLayout reminderLayout;
+    private String dateValue = "no";
+    private String timeValue = "no";
+    private String timeAndDateValue = "no";
     private TextInputLayout inputLayoutTask;
-    private TextInputLayout inputLayoutDescription;
-    private Toolbar toolbar;
     private SimpleDateFormat dateFormatter;
-    FloatingActionButton floatingActionButton;
+    private SimpleDateFormat timeFormatter;
+    private Calendar today;
+    private Calendar newDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
         findViewById();
-        setSupportActionBar(toolbar);
+        setToolbar();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,58 +58,142 @@ public class AddNoteActivity extends AppCompatActivity {
             }
         });
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.UK);
+        timeFormatter = new SimpleDateFormat("kk:mm", Locale.UK);
+        reminderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(AddNoteActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(false);
+                dialog.setContentView(R.layout.dialog_layout);
+                Button close = (Button) dialog.findViewById(R.id.close);
+                Button save = (Button) dialog.findViewById(R.id.save);
+                final TextView date = (TextView) dialog.findViewById(R.id.date_picker);
+                final TextView time = (TextView) dialog.findViewById(R.id.time_picker);
+                RelativeLayout dateLayout = (RelativeLayout) dialog.findViewById(R.id.date_layout);
+                RelativeLayout timeLayout = (RelativeLayout) dialog.findViewById(R.id.time_layout);
+                dateLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        datePicker(v);
+
+                    }
+                });
+                timeLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        timePicker(v);
+                    }
+                });
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        timeAndDateValue = dateValue + " " + timeValue;
+                        if (newDate.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH)) {
+                            textViewDate.setText("Today" + timeValue);
+                        } else {
+                            textViewDate.setText(dateValue + " " + timeValue);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+    }
+
+    private void setToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void findViewById() {
         inputTitle = (EditText) findViewById(R.id.input_title);
-        inputDescription =(EditText) findViewById(R.id.input_description);
+        inputDescription = (EditText) findViewById(R.id.input_description);
         inputDescription.setHintTextColor(getResources().getColor(R.color.colorSecondaryText));
-        textViewDate = (TextView) findViewById(R.id.text_view_date);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_add);
         inputLayoutTask = (TextInputLayout) findViewById(R.id.input_layout_title);
-//        inputLayoutDescription =(TextInputLayout) findViewById(R.id.input_layout_description);
-        inputTitle.addTextChangedListener(new MyTextWatcher(inputTitle));
-        inputDescription.addTextChangedListener(new MyTextWatcher(inputDescription));
+        assert inputLayoutTask != null;
+        inputLayoutTask.setHint("Task");
+        textViewDate = (TextView) findViewById(R.id.text_view_date);
+        textViewDateLayout = (TextView) findViewById(R.id.date);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_add);
+        reminderLayout = (RelativeLayout) findViewById(R.id.reminder);
 
     }
 
     public void addTask(View view) {
-        String noteTitle = inputTitle.getText().toString();
+        hideKeyboard();
+        String noteTitle = inputLayoutTask.getEditText().getText().toString();
         String noteDescription = inputDescription.getText().toString();
-        Intent intent = new Intent();
-        intent.putExtra("title", noteTitle);
-        intent.putExtra("date", dateValue);
-        intent.putExtra("description",noteDescription);
-        intent.putExtra("colorCircleIcon",colorGenerator());
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        if (!validateTask(noteTitle)) {
+            inputLayoutTask.setError("Enter your task!");
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("title", noteTitle);
+            intent.putExtra("date", timeAndDateValue);
+            intent.putExtra("description", noteDescription);
+            intent.putExtra("colorCircleIcon", colorGenerator());
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }
     }
-    private int colorGenerator(){
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
+                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    public boolean validateTask(String task) {
+        return task.trim().length() > 0;
+    }
+
+    private int colorGenerator() {
         ColorGenerator generator = ColorGenerator.MATERIAL;
         return generator.getRandomColor();
     }
+
     public void datePicker(View view) {
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                Calendar today = Calendar.getInstance();
+                newDate = Calendar.getInstance();
+                today = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                if(newDate.get(Calendar.DAY_OF_MONTH)==today.get(Calendar.DAY_OF_MONTH)){
-                    textViewDate.setText("Today");
-                    dateValue = dateFormatter.format(newDate.getTime());
-                }else{
-                    String day = newDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG,Locale.UK);
-                    textViewDate.setText(dateFormatter.format(newDate.getTime()));
-                    dateValue = dateFormatter.format(newDate.getTime());
-                }
-                view.invalidate();
+                dateValue = dateFormatter.format(newDate.getTime());
+//                view.invalidate();
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
 
+        datePickerDialog.show();
+    }
+
+    public void timePicker(View view) {
+        final Calendar calendar = Calendar.getInstance();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        Calendar newTime;
+                        newTime = Calendar.getInstance();
+                        newTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        newTime.set(Calendar.MINUTE, minute);
+                        timeValue = timeFormatter.format(newTime.getTime());
+//                        view.invalidate();
+                    }
+                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+        timePickerDialog.show();
     }
 
     @Override
@@ -129,64 +220,11 @@ public class AddNoteActivity extends AppCompatActivity {
             case R.id.add_alert_Button:
 //                datePicker(findViewById(android.R.id.content));
                 break;
+            case android.R.id.home:
+                finish();
             default:
                 break;
         }
         return true;
-    }
-    private void requestFocus(View view) {
-        if (view.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-//    private void submitForm(){
-//        if(!validateTitle()) {
-//            return;
-//        }
-//    }
-    private boolean validateTitle() {
-        if (inputTitle.getText().toString().trim().isEmpty()) {
-//            inputLayoutTask.setError(getString(R.string.err_msg_task));
-            requestFocus(inputTitle);
-            return false;
-        } else {
-            inputLayoutTask.setErrorEnabled(false);
-        }
-        return true;
-    }
-//    private boolean validateDescription() {
-//        if (inputDescription.getText().toString().trim().isEmpty()) {
-////            inputLayoutDescription.setError(getString(R.string.err_msg_task));
-//            requestFocus(inputDescription);
-//            return false;
-//        } else {
-//            inputLayoutDescription.setErrorEnabled(false);
-//        }
-//        return true;
-//    }
-    private class MyTextWatcher implements TextWatcher {
-
-        private View view;
-
-        private MyTextWatcher(View view) {
-            this.view = view;
-        }
-
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        public void afterTextChanged(Editable editable) {
-            switch (view.getId()) {
-                case R.id.input_title:
-                    validateTitle();
-                    break;
-//                case R.id.input_description:
-//                    validateDescription();
-//                    break;
-            }
-        }
     }
 }

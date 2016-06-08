@@ -34,7 +34,6 @@ public class NoteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             titleValue = extras.getString("title");
@@ -62,8 +61,8 @@ public class NoteActivity extends AppCompatActivity {
 
     }
     private String dateFormatter(String date) throws ParseException {
-        DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy", Locale.UK);
-        DateFormat format2 = new SimpleDateFormat("d, MMMM",Locale.UK);
+        DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy kk:mm", Locale.UK);
+        DateFormat format2 = new SimpleDateFormat("d, MMMM kk:mm",Locale.UK);
         Date date2 = format1.parse(date);
         return format2.format(date2).toString();
     }
@@ -92,6 +91,8 @@ public class NoteActivity extends AppCompatActivity {
                 Intent intentSettings = new Intent(this, SettingsActivity.class);
                 startActivity(intentSettings);
                 break;
+            case android.R.id.home:
+                finish();
             default:
                 break;
         }

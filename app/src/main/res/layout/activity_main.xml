@@ -38,7 +38,7 @@
         app:menu_icon="@drawable/fab_add"
         app:layout_behavior="com.owl.crazynote.FloatingFabButtonBehavior"
         fab:menu_colorNormal="@color/colorAccent"
-        fab:menu_colorPressed="@color/colorAccentPressed"
+        fab:menu_colorPressed="@color/colorAccent"
         fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
         fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
         fab:menu_labels_ellipsize="end"
@@ -54,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/add_a_photo_white"
+            app:fab_colorPressed="@color/colorAccent"
             fab:fab_size="mini"
             fab:fab_label="Add photo"
             style="@style/FabButtonMini"/>
@@ -63,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/note_add_white"
+            app:fab_colorPressed="@color/colorAccent"
             fab:fab_size="mini"
             fab:fab_label="Add Task"
             style="@style/FabButtonMini"/>

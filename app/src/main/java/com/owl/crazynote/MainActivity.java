@@ -52,107 +52,84 @@ public class MainActivity extends AppCompatActivity {
     private TaskAdapter taskAdapter;
     private Paint paint = new Paint();
     private InputMethodManager inputMethodManager;
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            final int position = viewHolder.getAdapterPosition();
-            lastNote = noteList.get(position);
-            dataBase.deleteTask(noteList.get(position).getId());
-            noteList.remove(position);
-            taskAdapter.notifyDataSetChanged();
-            showTasksInLog();
-            Snackbar.make(recyclerView, "1 note removed", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dataBase.addTask(lastNote);
-                    noteList.add(lastNote);
-                    Collections.sort(noteList);
-                    taskAdapter.notifyItemInserted(noteList.indexOf(lastNote));
-                    recyclerView.requestLayout();
-                }
-            }).show();
-        }
-
-        @Override
-        public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-            Bitmap icon;
-            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                View view = viewHolder.itemView;
-//                float height = (float) view.getBottom() - (float) view.getTop();
-                float height = view.getHeight();
-                float width = height / 3;
-                if (dX > 0) {
-                   paint.setColor(Color.parseColor("#388E3C"));
-                    RectF background = new RectF((float) view.getLeft(), (float) view.getTop(), dX, (float) view.getBottom());
-                    c.drawRect(background, paint);
-                    icon = BitmapFactory.decodeResource(getResources(), R.drawable.done_white);
-                    RectF icon_dest = new RectF((float) view.getLeft() + width, (float) view.getTop() + width, (float) view.getLeft() + 2 * width, (float) view.getBottom() - width);
-                  c.drawBitmap(icon, null, icon_dest, paint);
-                }
+    private void initSwipe(){
+        //|ItemTouchHelper.LEFT add this to ItemTouchHelper.SimpleCallback
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
             }
-            super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        }
-    };
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition();
+                if(direction == ItemTouchHelper.RIGHT) {
+                    lastNote = noteList.get(position);
+                    dataBase.deleteTask(noteList.get(position).getId());
+                    noteList.remove(position);
+                    taskAdapter.notifyDataSetChanged();
+                    showTasksInLog();
+                    Snackbar.make(recyclerView, "1 note removed", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dataBase.addTask(lastNote);
+                            noteList.add(lastNote);
+                            Collections.sort(noteList);
+                            taskAdapter.notifyItemInserted(noteList.indexOf(lastNote));
+                            recyclerView.requestLayout();
+                        }
+                    }).show();
+                }
+//                }else{
+////                    For future xd
+////                    Snackbar.make(recyclerView,"Test",Snackbar.LENGTH_SHORT).show();
+//                }
 
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                Bitmap icon;
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getHeight();
+                    float width = height / 3;
+
+                    if(dX > 0) {
+                        paint.setColor(Color.parseColor("#388E3C"));
+                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
+                        c.drawRect(background, paint);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_done_white_128dp);
+                        RectF icon_dest = new RectF((float) itemView.getLeft() + width, (float) itemView.getTop() + width, (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom() - width);
+                        c.drawBitmap(icon, null, icon_dest, paint);
+                    }
+//                    } else {
+//                        p.setColor(Color.parseColor("#D32F2F"));
+//                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+//                        c.drawRect(background,p);
+//                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_white);
+//                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+//                        c.drawBitmap(icon,null,icon_dest,p);
+//                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        //Fab buttons
-        fabAddTask = (FloatingActionButton) findViewById(R.id.fab_add_task);
-        assert fabAddTask != null;
-        //Fab menu
-        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
-        assert floatingActionMenu != null;
-        floatingActionMenu.setClosedOnTouchOutside(true);
-        fabAddTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
-                //close fab menu after click
-                floatingActionMenu.close(true);
-            }
-        });
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
-                @Override
-                public void onRefresh(){
-                    refreshRecycleView();
-                    Toast.makeText(MainActivity.this, "Refreshed", Toast.LENGTH_SHORT).show();
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            });
-        }
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        layoutManager.scrollToPosition(0);
-
-        //Recycle view decoration
-        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new FadeInRightAnimator());
-
-        //add to database and refresh Recycler View
+        setSwipeRefresh();
+        setToolbar();
+        setFab();
+        setRecyclerView();
         refreshRecycleView();
-        showTasksInLog();
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-
+        initSwipe();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode != REQUEST_CODE || resultCode != Activity.RESULT_OK) return;
@@ -198,9 +175,56 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Dane z bazy:", t.toString());
         }
     }
+    private void setRecyclerView(){
+        recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.scrollToPosition(0);
+
+        //Recycle view decoration
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new FadeInRightAnimator());
+    }
     private void refreshRecycleView() {
         noteList = dataBase.getAllTask();
         taskAdapter = new TaskAdapter(noteList,this);
         recyclerView.setAdapter(taskAdapter);
+    }
+    private void setSwipeRefresh(){
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+                @Override
+                public void onRefresh(){
+                    refreshRecycleView();
+                    Toast.makeText(MainActivity.this, "Refreshed", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
+    }
+    private void setToolbar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+    private void setFab(){
+        fabAddTask = (FloatingActionButton) findViewById(R.id.fab_add_task);
+        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
+        floatingActionMenu.setClosedOnTouchOutside(true);
+
+        fabAddTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+                //close fab menu after click
+                floatingActionMenu.close(true);
+            }
+        });
+
     }
 }

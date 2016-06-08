@@ -40,14 +40,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
     public void onBindViewHolder(final MyViewHolder viewHolder, final int position) {
         final Note note = noteItems.get(position);
         viewHolder.noteTitle.setText(note.getTitle());
-        if(!(note.getDate()=="noReminder")){
+        if(!(note.getDate()=="no")){
             try {
                 viewHolder.date.setText(dateFormatter(note.getDate()));
             } catch (ParseException e) {
-                e.printStackTrace();
+//                e.printStackTrace(); shhhhhhhhhhhhhh
+
             }
         }else{
-            viewHolder.noteTitle.setText(" ");
+//            viewHolder.noteTitle.setText(" "); TODO: 07.06.16
+            viewHolder.date.setVisibility(TextView.INVISIBLE);
         }
         viewHolder.iconCircle.setImageDrawable(generatorIcon(note.getTitle(),note.getColorCircleIcon()));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +67,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
         if(giverSign.equals(" ")){
             return TextDrawable.builder().buildRound("T",color);
         }else{
-            return TextDrawable.builder().buildRound(giverSign.substring(0,1),color);
+            return TextDrawable.builder().buildRound((giverSign.substring(0,1)).toUpperCase(),color);
 
         }
     }
