@@ -28,14 +28,22 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginEnd="16dp"/>
-                <TextView
-                    android:id="@+id/date_picker"
-                    android:layout_width="wrap_content"
+                <!--<TextView-->
+                    <!--android:id="@+id/date_picker"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Set date"-->
+                    <!--style="@android:style/TextAppearance.Medium"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_toEndOf="@+id/dateIcon"/>-->
+                <Spinner
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Set date"
-                    style="@android:style/TextAppearance.Medium"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/dateIcon"/>
+                    android:id="@+id/days"
+                    style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                    android:layout_alignBottom="@+id/dateIcon"
+                    android:layout_toEndOf="@+id/dateIcon">
+                </Spinner>
 
             </RelativeLayout>
             <RelativeLayout

@@ -5,11 +5,11 @@ import java.io.Serializable;
 /**
  * Created by owl on 19.05.16.
  */
-public class Note implements Serializable, Comparable<Note> {
+public class Task implements Serializable, Comparable<Task> {
     private String title, date, description;
     private int id, colorCircleIcon;
 
-    public Note(String title, String date, String description, int colorCircleIcon) {
+    public Task(String title, String date, String description, int colorCircleIcon) {
         this.title = title;
         this.date = date;
         this.description = description;
@@ -24,7 +24,7 @@ public class Note implements Serializable, Comparable<Note> {
         this.colorCircleIcon = colorCircleIcon;
     }
 
-    public Note() {
+    public Task() {
     }
 
     public int getId() {
@@ -61,7 +61,7 @@ public class Note implements Serializable, Comparable<Note> {
 
     @Override
     public String toString() {
-        return "Note{" +
+        return "Task{" +
                 "title='" + title + '\'' +
                 ", date='" + date + '\'' +
                 ", description='" + description + '\'' +
@@ -70,7 +70,7 @@ public class Note implements Serializable, Comparable<Note> {
     }
 
     @Override
-    public int compareTo(Note another) {
+    public int compareTo(Task another) {
         return ((Integer) getId()).compareTo(another.getId());
     }
 }

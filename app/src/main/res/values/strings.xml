@@ -20,4 +20,10 @@
     <string name="inputDescriptionHint">Description</string>
     <string name="title_activity_note">NoteActivity</string>
     <string name="deleteNoteMenu">Delete</string>
+    <string-array name="nextFewDays">
+        <item>Today</item>
+        <item>Tomorrow</item>
+        <item>Select a date…</item>
+    </string-array>
 </resources>
+

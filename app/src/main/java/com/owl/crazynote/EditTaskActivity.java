@@ -27,10 +27,9 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
-public class AddNoteActivity extends AppCompatActivity {
+public class EditTaskActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     private EditText inputTitle;
     private EditText inputDescription;
@@ -40,6 +39,10 @@ public class AddNoteActivity extends AppCompatActivity {
     private String dateValue = "no";
     private String timeValue = "no";
     private String timeAndDateValue = "no";
+    private String extrasTitleValue;
+    private String extrasDescritpionValue;
+    private String extrasDateValue;
+    private int extrasId;
     private TextInputLayout inputLayoutTask;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy", Locale.UK);
     private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.UK);
@@ -57,6 +60,8 @@ public class AddNoteActivity extends AppCompatActivity {
 //        setSpinner();
         findViewById();
         setToolbar();
+        receiverTaskActivity();
+        setDataInViews();
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +72,7 @@ public class AddNoteActivity extends AppCompatActivity {
         reminderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(AddNoteActivity.this);
+                final Dialog dialog = new Dialog(EditTaskActivity.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.dialog_layout);
@@ -112,6 +117,22 @@ public class AddNoteActivity extends AppCompatActivity {
         });
     }
 
+    private void setDataInViews() {
+        inputTitle.setText(extrasTitleValue);
+        inputDescription.setText(extrasDescritpionValue);
+        textViewDate.setText(extrasDateValue);
+    }
+
+    private void receiverTaskActivity() {
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            extrasTitleValue = extras.getString("title");
+            extrasDescritpionValue = extras.getString("description");
+            extrasDateValue = extras.getString("date");
+            extrasId = extras.getInt("id");
+        }
+    }
+
     private void setSpinner() {
         nextFewDays = getResources().getStringArray(R.array.nextFewDays);
         spinnerDays = (Spinner) findViewById(R.id.days);
@@ -130,15 +151,6 @@ public class AddNoteActivity extends AppCompatActivity {
             }
         });
     }
-    private String defaultDate(){
-        Calendar calendar = Calendar.getInstance();
-        return dateFormatter.format(calendar.getTime());
-    }
-    private String defaultTime(){
-        Calendar calendar = Calendar.getInstance();
-        return dateFormatter.format(calendar.getTime());
-    }
-
     private void setToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -156,7 +168,6 @@ public class AddNoteActivity extends AppCompatActivity {
         textViewDateLayout = (TextView) findViewById(R.id.date);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_add);
         reminderLayout = (RelativeLayout) findViewById(R.id.reminder);
-
     }
 
     public void addTask(View view) {

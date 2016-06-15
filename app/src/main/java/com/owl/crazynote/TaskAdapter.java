@@ -3,7 +3,6 @@ package com.owl.crazynote;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,9 @@ import java.util.Locale;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
     private Context context;
-    private List<Note> noteItems;
-    public TaskAdapter(List<Note> noteItems, Context context) {
-        this.noteItems = noteItems;
+    private List<Task> taskItems;
+    public TaskAdapter(List<Task> taskItems, Context context) {
+        this.taskItems = taskItems;
         this.context = context;
     }
 
@@ -38,11 +37,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
 
     @Override
     public void onBindViewHolder(final MyViewHolder viewHolder, final int position) {
-        final Note note = noteItems.get(position);
-        viewHolder.noteTitle.setText(note.getTitle());
-        if(!(note.getDate()=="no")){
+        final Task task = taskItems.get(position);
+        viewHolder.noteTitle.setText(task.getTitle());
+        if(!(task.getDate()=="no")){
             try {
-                viewHolder.date.setText(dateFormatter(note.getDate()));
+                viewHolder.date.setText(dateFormatter(task.getDate()));
             } catch (ParseException e) {
 //                e.printStackTrace(); shhhhhhhhhhhhhh
 
@@ -51,14 +50,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
 //            viewHolder.noteTitle.setText(" "); TODO: 07.06.16
             viewHolder.date.setVisibility(TextView.INVISIBLE);
         }
-        viewHolder.iconCircle.setImageDrawable(generatorIcon(note.getTitle(),note.getColorCircleIcon()));
+        viewHolder.iconCircle.setImageDrawable(generatorIcon(task.getTitle(), task.getColorCircleIcon()));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,NoteActivity.class);
-                intent.putExtra("title",note.getTitle());
-                intent.putExtra("description",note.getDescription());
-                intent.putExtra("date",note.getDate());
+                Intent intent = new Intent(context,TaskActivity.class);
+                intent.putExtra("title", task.getTitle());
+                intent.putExtra("description", task.getDescription());
+                intent.putExtra("date", task.getDate());
+                intent.putExtra("id", task.getId());
                 context.startActivity(intent);
             }
         });
@@ -72,7 +72,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
         }
     }
     private String dateFormatter(String date) throws ParseException {
-        DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy",Locale.UK);
+        DateFormat format1 = new SimpleDateFormat("dd.MM.yyyy",Locale.UK);
         DateFormat format2 = new SimpleDateFormat("d, MMMM",Locale.UK);
         Date date2 = format1.parse(date);
         return format2.format(date2);
@@ -80,7 +80,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder>{
 
     @Override
     public int getItemCount() {
-        return noteItems.size();
+        return taskItems.size();
     }
 
 
