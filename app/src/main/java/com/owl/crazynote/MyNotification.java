@@ -15,9 +15,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by owl on 09.06.16.
- */
 public class MyNotification {
     private String dateToSet;
     private Context context;
@@ -67,7 +64,7 @@ public class MyNotification {
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentTitle("Crazynote");
         builder.setContentText(contentNotification);
-        builder.setSmallIcon(R.drawable.done_white);
+        builder.setSmallIcon(R.drawable.ic_done_all_white_36dp);
         builder.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE);
 //        builder.setContentIntent(resultPendingIntent);
         return builder.build();
