@@ -1,9 +1,6 @@
 package com.owl.crazynote;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddNoteActivity extends AppCompatActivity {
+public class AddTaskActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     private EditText inputTitle;
     private EditText inputDescription;
@@ -40,35 +40,39 @@ public class AddNoteActivity extends AppCompatActivity {
     private String timeValue = "no";
     private String timeAndDateValue = "no";
     private TextInputLayout inputLayoutTask;
-    private SimpleDateFormat dateFormatter;
-    private SimpleDateFormat timeFormatter;
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy", Locale.UK);
+    private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.UK);
     private Calendar today;
     private Calendar newDate;
+    private MyNotification myNotification;
+    private Spinner spinnerDays;
+    private String nextFewDays[];
+    private ArrayAdapter<String> adapterDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
+//        setSpinner();
         findViewById();
         setToolbar();
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTask(v);
             }
         });
-        dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.UK);
-        timeFormatter = new SimpleDateFormat("kk:mm", Locale.UK);
         reminderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(AddNoteActivity.this);
+                final Dialog dialog = new Dialog(AddTaskActivity.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.dialog_layout);
                 Button close = (Button) dialog.findViewById(R.id.close);
                 Button save = (Button) dialog.findViewById(R.id.save);
-                final TextView date = (TextView) dialog.findViewById(R.id.date_picker);
+//                final TextView date = (TextView) dialog.findViewById(R.id.date_picker);
                 final TextView time = (TextView) dialog.findViewById(R.id.time_picker);
                 RelativeLayout dateLayout = (RelativeLayout) dialog.findViewById(R.id.date_layout);
                 RelativeLayout timeLayout = (RelativeLayout) dialog.findViewById(R.id.time_layout);
@@ -76,7 +80,6 @@ public class AddNoteActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         datePicker(v);
-
                     }
                 });
                 timeLayout.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +111,33 @@ public class AddNoteActivity extends AppCompatActivity {
         });
     }
 
+    private void setSpinner() { //TODO: fix
+        nextFewDays = getResources().getStringArray(R.array.nextFewDays);
+        spinnerDays = (Spinner) findViewById(R.id.days);
+        adapterDays = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, nextFewDays);
+        adapterDays.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDays.setAdapter(adapterDays);
+        spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+//                datePicker(view);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+    private String defaultDate(){
+        Calendar calendar = Calendar.getInstance();
+        return dateFormatter.format(calendar.getTime());
+    }
+    private String defaultTime(){
+        Calendar calendar = Calendar.getInstance();
+        return dateFormatter.format(calendar.getTime());
+    }
+
     private void setToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -120,7 +150,7 @@ public class AddNoteActivity extends AppCompatActivity {
         inputDescription.setHintTextColor(getResources().getColor(R.color.colorSecondaryText));
         inputLayoutTask = (TextInputLayout) findViewById(R.id.input_layout_title);
         assert inputLayoutTask != null;
-        inputLayoutTask.setHint("Task");
+        inputLayoutTask.setHint("DataBase");
         textViewDate = (TextView) findViewById(R.id.text_view_date);
         textViewDateLayout = (TextView) findViewById(R.id.date);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_add);

@@ -2,7 +2,6 @@ package com.owl.crazynote;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,19 +16,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class NoteActivity extends AppCompatActivity {
+public class TaskActivity extends AppCompatActivity {
     TextView title;
     TextView description;
     TextView date;
     String titleValue;
     String descriptionValue;
     String dateValue;
+    DataBase dataBaseBase;
+    int taskId;
     Toolbar toolbar;
     FloatingActionButton floatingActionButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note);
+        setContentView(R.layout.activity_task);
+        dataBaseBase = new DataBase(TaskActivity.this);
         findViewById();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -39,9 +41,14 @@ public class NoteActivity extends AppCompatActivity {
             titleValue = extras.getString("title");
             descriptionValue = extras.getString("description");
             dateValue = extras.getString("date");
+            taskId = extras.getInt("id");
         }
         title.setText(titleValue);
-        description.setText(descriptionValue);
+        if(!descriptionValue.isEmpty()){
+            description.setText(descriptionValue);
+        }else{
+            description.setText("Task doesn't have description");
+        }
         if(!dateValue.equals("noReminder")){
             try {
                 date.setText(dateFormatter(dateValue));
@@ -61,8 +68,8 @@ public class NoteActivity extends AppCompatActivity {
 
     }
     private String dateFormatter(String date) throws ParseException {
-        DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy kk:mm", Locale.UK);
-        DateFormat format2 = new SimpleDateFormat("d, MMMM kk:mm",Locale.UK);
+        DateFormat format1 = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.UK);
+        DateFormat format2 = new SimpleDateFormat("dd.MM.yyyy HH:mm",Locale.UK);
         Date date2 = format1.parse(date);
         return format2.format(date2).toString();
     }
@@ -85,8 +92,9 @@ public class NoteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.action_delete:
+                dataBaseBase.deleteTask(taskId);
+                finish();
                 break;
-
             case R.id.action_settings:
                 Intent intentSettings = new Intent(this, SettingsActivity.class);
                 startActivity(intentSettings);

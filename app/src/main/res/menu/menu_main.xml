@@ -11,4 +11,8 @@
         android:id="@+id/action_about_app"
         android:title="@string/action_about_app"
         android:orderInCategory="2"/>
+    <item
+        android:id="@+id/show_notification_test"
+        android:title="Show notification"
+        android:orderInCategory="3"/>
 </menu>
