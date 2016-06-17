@@ -62,7 +62,12 @@ public class TaskActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplicationContext(),TaskActivity.class);
+                intent.putExtra("title",titleValue);
+                intent.putExtra("description", descriptionValue);
+                intent.putExtra("date", dateValue);
+                intent.putExtra("id", taskId);
+                getApplicationContext().startActivity(intent);
             }
         });
 
